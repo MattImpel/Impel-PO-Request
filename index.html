@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Impel Interiors - PO Request</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FC5F02;
+  --bg:#111;
+  --card:#1e1e1e;
+  --border:#2a2a2a;
+  --text:#f0f0f0;
+  --muted:#888;
+  --input:#1a1a1a;
+  --label-size:11px;
+  --input-font:17px;
+  --input-h:52px;
+  --radius:5px;
+}
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  padding:12px 14px 60px;
+  max-width:480px;
+  margin:0 auto;
+}
+
+/* HEADER */
+.header{
+  border-bottom:2.5px solid var(--orange);
+  padding-bottom:10px;
+  margin-bottom:16px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+}
+.subtitle{
+  font-family:'Bebas Neue',sans-serif;
+  color:var(--orange);
+  font-size:18px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  display:block;
+  line-height:1.15;
+  flex:1;
+  white-space:nowrap;
+}
+
+/* SECTION HEADER */
+.mat-header{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:19px; letter-spacing:2px;
+  color:var(--orange);
+  margin-bottom:8px;
+}
+
+/* GROUP SPACING */
+.group{ margin-bottom:10px; }
+
+/* GRIDS */
+.grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.top-row{ display:grid; grid-template-columns:110px 1fr 1fr; gap:8px; }
+.job-row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:start; }
+.req-row{ display:flex; gap:8px; }
+.req-row .dt-field{ flex:1 1 0; min-width:0; }
+
+/* FLOATING LABEL INPUTS */
+.fl{ position:relative; }
+.fl input,
+.fl select,
+.fl textarea{
+  width:100%; padding:20px 13px 8px 13px;
+  background:var(--input); border:1.5px solid #222;
+  color:var(--text); border-radius:var(--radius);
+  font-size:var(--input-font); font-family:'DM Sans',sans-serif; display:block;
+  min-height:var(--input-h);
+  -webkit-appearance:none; appearance:none;
+}
+.fl textarea{ resize:none; overflow:hidden; min-height:var(--input-h); padding-top:22px; }
+.fl label{
+  position:absolute; top:6px; left:13px;
+  font-size:var(--label-size); letter-spacing:0.5px; text-transform:uppercase;
+  color:var(--orange); pointer-events:none;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  max-width:calc(100% - 18px); font-weight:500;
+}
+.fl input:focus,.fl select:focus,.fl textarea:focus{ outline:none; border-color:var(--orange); }
+.fl input:-webkit-autofill,
+.fl input:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 100px #1a1a1a inset !important;
+  -webkit-text-fill-color:#f0f0f0 !important;
+}
+input::placeholder, textarea::placeholder{ color:transparent; }
+select{ -webkit-appearance:none; -moz-appearance:none; appearance:none; }
+
+/* Job Number & Cost Centre */
+.jobcc-wrap{ position:relative; }
+.jobcc-wrap label{
+  position:absolute; top:6px; left:13px;
+  font-size:var(--label-size); letter-spacing:0.5px; text-transform:uppercase;
+  color:var(--orange); pointer-events:none; white-space:nowrap; font-weight:500;
+}
+.jobcc-input{
+  width:100%;
+  padding:20px 13px 8px 13px;
+  background:var(--input); border:1.5px solid #222;
+  color:var(--text); border-radius:var(--radius);
+  font-size:var(--input-font); font-family:monospace; letter-spacing:2px;
+  display:block; min-height:var(--input-h);
+  -webkit-appearance:none; appearance:none;
+}
+.jobcc-input:focus{ outline:none; border-color:var(--orange); }
+.jobcc-input:-webkit-autofill,
+.jobcc-input:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 100px #1a1a1a inset !important;
+  -webkit-text-fill-color:#f0f0f0 !important;
+}
+
+/* DATE display field */
+.dt-field{ position:relative; }
+.dt-field .dt-display{
+  width:100%; padding:20px 13px 8px 13px;
+  background:var(--input); border:1.5px solid #222;
+  color:var(--text); border-radius:var(--radius);
+  font-size:var(--input-font); font-family:'DM Sans',sans-serif;
+  cursor:pointer; display:block; min-height:var(--input-h);
+}
+.dt-field label{
+  position:absolute; top:6px; left:13px;
+  font-size:var(--label-size); letter-spacing:0.5px; text-transform:uppercase;
+  color:var(--orange); pointer-events:none; font-weight:500;
+}
+.dt-field .dt-native{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  opacity:0; cursor:pointer; border:none; background:transparent;
+  font-size:16px; -webkit-appearance:none; appearance:none;
+}
+
+/* Required By row */
+.req-row{ display:flex; gap:8px; }
+.req-row .dt-field{ flex:1 1 0; min-width:0; }
+.asap-btn{
+  cursor:pointer; border-radius:var(--radius); padding:14px 12px;
+  font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:3px;
+  background:var(--input); color:var(--text);
+  border:1.5px solid #222; text-align:center;
+  white-space:nowrap; display:block; width:100%;
+}
+/* ASAP active: orange fill, bold black text */
+.asap-btn.active{
+  background:var(--orange);
+  border-color:var(--orange);
+  color:#000;
+  font-weight:900;
+}
+.asap-btn:active{ opacity:.85; }
+
+/* ASAP with date+time selected: strikethrough text, normal styling */
+.asap-btn.datetime-set{
+  text-decoration:line-through;
+  color:var(--muted);
+}
+
+/* MATERIALS TABLE */
+table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+.col-qty{ width:72px; }
+.col-unit{ width:76px; }
+.col-desc{ width:auto; }
+td{ padding:3px 0 3px 0; vertical-align:top; }
+td:not(:last-child){ padding-right:4px; }
+.cell-fl{ position:relative; height:100%; }
+.cell-fl input,
+.cell-fl select{
+  width:100%; height:44px;
+  padding:0 8px;
+  background:var(--input); border:1.5px solid #222;
+  color:var(--text); border-radius:var(--radius);
+  font-size:16px; font-family:'DM Sans',sans-serif;
+  display:block; -webkit-appearance:none; -moz-appearance:none; appearance:none;
+  text-align:center;
+}
+.cell-fl textarea{
+  width:100%; height:44px; min-height:44px;
+  padding:8px;
+  background:var(--input); border:1.5px solid #222;
+  color:var(--text); border-radius:var(--radius);
+  font-size:16px; font-family:'DM Sans',sans-serif;
+  resize:none; overflow:hidden; display:block;
+}
+.cell-fl label{
+  position:absolute; top:4px; left:7px;
+  font-size:var(--label-size); letter-spacing:0.5px; text-transform:uppercase;
+  color:var(--orange); pointer-events:none; font-weight:500;
+}
+.cell-fl input:focus,.cell-fl select:focus,.cell-fl textarea:focus{ outline:none; border-color:var(--orange); }
+
+/* BUTTONS */
+.add-btn,.email-btn,.messenger-btn{
+  display:block; width:100%; border:none; cursor:pointer;
+  border-radius:var(--radius); padding:15px 18px;
+  font-family:'Bebas Neue',sans-serif; letter-spacing:1.5px; font-size:17px; text-align:center;
+}
+.add-btn{
+  background:var(--orange); color:#fff;
+  margin-top:10px !important; display:block !important;
+  width:26px !important; height:26px !important;
+  padding:0 !important; font-size:18px !important;
+  line-height:26px !important; text-align:center !important;
+  border-radius:50% !important; margin-left:auto !important;
+  margin-right:auto !important;
+}
+.email-btn{ background:var(--orange); color:#fff; }
+.messenger-btn{ background:var(--orange); color:#fff; }
+.add-btn:active,.email-btn:active,.messenger-btn:active{ opacity:.82; }
+
+/* PRINT STYLES */
+@media print{
+  .actions-card{ display:none !important; }
+  .add-btn{ display:none !important; }
+  .page3{ display:block !important; }
+  .fl label, .dt-field label, .cell-fl label, .jobcc-wrap label{
+    color:#FC5F02 !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .subtitle{ color:#FC5F02 !important; white-space:nowrap !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .fl input,.fl select,.fl textarea,
+  .dt-field .dt-display,
+  .cell-fl input,.cell-fl select,.cell-fl textarea,
+  .jobcc-input{
+    color:#000 !important; background:#fff !important; border-color:#ccc !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  /* ASAP button print: never black background */
+  .asap-btn{
+    background:#fff !important;
+    color:#000 !important;
+    border-color:#ccc !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  /* ASAP active state when printing */
+  .asap-btn.active{
+    background:#FC5F02 !important;
+    border-color:#FC5F02 !important;
+    color:#000 !important;
+    font-weight:900 !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  /* When date+time set, ASAP gets strikethrough but same box styling */
+  .asap-btn.datetime-set{
+    text-decoration:line-through !important;
+    background:#fff !important;
+    border-color:#ccc !important;
+    color:#999 !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  body{ padding:8px 8px 20px !important; max-width:100% !important; }
+  .group{ margin-bottom:8px !important; }
+  .header{ padding-bottom:6px !important; margin-bottom:10px !important; }
+}
+.page3{ display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER: PO Request left, auto date right, both mat-header style -->
+  <div class="header" style="display:flex; align-items:flex-end; justify-content:space-between; border-bottom:2.5px solid var(--orange); padding-bottom:10px; margin-bottom:16px;">
+    <!-- Left: Purchase Order Request -->
+    <div style="display:flex; align-items:flex-end; flex:1;">
+      <div style="font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:2px; color:var(--orange); text-align:left; white-space:nowrap;">Purchase Order Request</div>
+    </div>
+    <!-- Right: Auto date -->
+    <div style="display:flex; align-items:flex-end; flex-shrink:0; padding-left:10px;">
+      <div id="disp-date" style="font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:2px; color:var(--orange); text-align:right; white-space:nowrap;"></div>
+      <input type="text" id="f-date" style="display:none;">
+    </div>
+  </div>
+
+  <!-- ROW 1: Job/Site | Job Number & Cost Centre (equal width) -->
+  <div class="group">
+    <div class="job-row">
+      <div class="fl">
+        <label>Job / Site</label>
+        <input type="text" id="f-job">
+      </div>
+      <div class="jobcc-wrap">
+        <label>Job Number &amp; Cost Centre</label>
+        <input type="text" id="f-jobcc" class="jobcc-input"
+          autocomplete="off"
+          maxlength="10"
+          value=""
+          oninput="enforceJobCC(this)"
+          onfocus="initJobCC(this)"
+          placeholder="#1234-5678">
+      </div>
+    </div>
+  </div>
+
+  <!-- Description of Work -->
+  <div class="group">
+    <div class="fl">
+      <label>Description of Work</label>
+      <textarea id="f-work" oninput="autoGrow(this)"></textarea>
+    </div>
+  </div>
+
+  <!-- ROW 2: Requested By | Collection By (equal width) -->
+  <div class="group">
+    <div class="job-row">
+      <div class="fl">
+        <label>Requested By</label>
+        <select id="f-emp">
+          <option value=""></option>
+          <option>Bronson</option>
+          <option>Josh</option>
+          <option>Kalani</option>
+          <option>Reece</option>
+        </select>
+      </div>
+      <div class="fl">
+        <label>Collection By</label>
+        <select id="f-col">
+          <option value=""></option>
+          <option>Blay</option>
+          <option>Bronson</option>
+          <option>Josh</option>
+          <option>Kalani</option>
+          <option>Matt</option>
+          <option>Reece</option>
+          <option>Travis</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Required By -->
+  <div class="group">
+    <div class="req-row">
+      <div class="dt-field" style="flex:1 1 0;min-width:0;">
+        <label>Required Date</label>
+        <div class="dt-display" id="disp-req-date"></div>
+        <input class="dt-native" type="date" id="f-req-date" oninput="updateDisplay('f-req-date','disp-req-date','date'); checkStrikeASAP();">
+      </div>
+      <div class="dt-field" style="flex:1 1 0;min-width:0;">
+        <label>Required Time</label>
+        <div class="dt-display" id="disp-req-time"></div>
+        <input class="dt-native" type="time" id="f-req-time" oninput="updateDisplay('f-req-time','disp-req-time','time'); checkStrikeASAP();">
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <button type="button" class="asap-btn" id="asap-btn" onclick="toggleASAP()">ASAP</button>
+    </div>
+  </div>
+
+  <!-- SUPPLIER & MATERIALS -->
+  <div class="mat-header" style="text-align:center;">SUPPLIER &amp; MATERIALS</div>
+  <div style="margin-bottom:8px;">
+    <div class="fl">
+      <label>Supplier</label>
+      <select id="f-sup" onchange="toggleOtherSupplier()">
+        <option value=""></option>
+        <option>Asona</option>
+        <option>Autex</option>
+        <option>Best Doors</option>
+        <option>Bunnings</option>
+        <option>Comfortech</option>
+        <option>Intex</option>
+        <option>Mitre 10</option>
+        <option>Placemakers</option>
+        <option>Potters</option>
+        <option>T&amp;R</option>
+        <option>Trade Direct</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="fl" id="sup-other-wrap" style="display:none; margin-top:6px;">
+      <label>Other Supplier</label>
+      <input type="text" id="f-sup-other">
+    </div>
+  </div>
+
+  <!-- Collection / Delivery Details -->
+  <div class="group">
+    <div class="fl">
+      <label>Collection / Delivery Details</label>
+      <textarea id="f-del" oninput="autoGrow(this)"></textarea>
+    </div>
+  </div>
+
+  <div style="margin-bottom:12px;">
+    <table>
+      <colgroup>
+        <col class="col-qty">
+        <col class="col-unit">
+        <col class="col-desc">
+      </colgroup>
+      <thead>
+        <tr>
+          <th style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; color:var(--orange); text-align:center; padding-bottom:4px;">Qty</th>
+          <th style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; color:var(--orange); text-align:center; padding-bottom:4px;">Unit</th>
+          <th style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; color:var(--orange); text-align:center; padding-bottom:4px;">Description</th>
+        </tr>
+      </thead>
+      <tbody id="materials"></tbody>
+    </table>
+    <button class="add-btn" onclick="addRow()">+</button>
+  </div>
+
+  <!-- ── ACTIONS (on-screen only) ───────────────────────── -->
+  <div class="actions-card" style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+
+    <div style="background:var(--input); border:1.5px solid #2a2a2a; border-radius:5px; padding:12px;">
+      <button class="email-btn" onclick="sendEmail()">Send via Email</button>
+    </div>
+
+    <div style="background:var(--input); border:1.5px solid #2a2a2a; border-radius:5px; padding:12px;">
+      <button class="messenger-btn" onclick="copyForMessenger()">Send via Messenger</button>
+      <div id="copy-confirm" style="display:none; font-size:12px; color:#4CAF50; margin-top:8px;">✓ Copied! Now open Messenger and paste.</div>
+    </div>
+
+    <div style="background:var(--input); border:1.5px solid #2a2a2a; border-radius:5px; padding:12px;">
+      <div style="font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:2px; color:var(--orange); margin-bottom:10px;">Save as PDF</div>
+      <div style="font-size:13px; color:#999; line-height:1.9;">
+        <strong style="color:#ccc; display:block; margin-top:6px;">Chrome / Brave (Android):</strong> Tap the ⋮ menu → Share → Print → tap the dropdown at top and select Save as PDF → tap the save icon.<br>
+        <strong style="color:#ccc; display:block; margin-top:6px;">Safari (iPhone):</strong> Tap the Share icon → tap Print → pinch-zoom out on the preview → tap Share again → Save to Files.<br>
+        <strong style="color:#ccc; display:block; margin-top:6px;">Chrome (iPhone):</strong> Tap ⋮ menu → Share → Print → Save as PDF.<br>
+        <strong style="color:#ccc; display:block; margin-top:6px;">Edge (Android &amp; iPhone):</strong> Tap ⋯ menu → Share → Print → Save as PDF.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── PAGE 3 BLOCK — hidden on screen, shown only when printing ── -->
+  <div class="page3" style="page-break-before:always; padding-top:40px;">
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; color:#FC5F02; margin-bottom:10px;">Save as PDF</div>
+    <div style="font-size:12px; color:#555; line-height:1.8; margin-bottom:24px;">
+      <strong>Chrome / Brave (Android):</strong> Tap the ⋮ menu → Share → Print → tap the dropdown at top and select Save as PDF → tap the save icon.<br>
+      <strong>Safari (iPhone):</strong> Tap the Share icon → tap Print → pinch-zoom out on the preview → tap Share again → Save to Files.<br>
+      <strong>Chrome (iPhone):</strong> Tap ⋮ menu → Share → Print → Save as PDF.<br>
+      <strong>Edge (Android &amp; iPhone):</strong> Tap ⋯ menu → Share → Print → Save as PDF.
+    </div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; color:#FC5F02; margin-bottom:8px;">Send via Messenger</div>
+    <div style="font-size:12px; color:#555; margin-bottom:24px;">Tap Copy &amp; Send via Messenger on the form, then open Messenger, start a message to Reece and Matt, and paste.</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; color:#FC5F02; margin-bottom:8px;">Send via Email</div>
+    <div style="font-size:12px; color:#555;">Tap Send via Email on the form to open a pre-filled email to Reece and Matt.</div>
+  </div>
+
+</div><!-- /wrap -->
+
+
+<script>
+// Today's date
+const today = new Date();
+const dd = String(today.getDate()).padStart(2,'0');
+const mm = String(today.getMonth()+1).padStart(2,'0');
+const yyyy = today.getFullYear();
+document.getElementById('f-date').value = `${dd}/${mm}/${yyyy}`;
+
+function formatDateFull(val){
+  const [y,m,d] = val.split('-');
+  return `${d}/${m}/${y}`;
+}
+const dispDate = document.getElementById('disp-date');
+if(dispDate) dispDate.textContent = `${dd}/${mm}/${yyyy}`;
+
+// ── Job Number & Cost Centre field ───────────────────────────────────
+function initJobCC(el){
+  if(!el.value || el.value === '#') el.value = '#';
+  setTimeout(()=>{ el.setSelectionRange(el.value.length, el.value.length); }, 0);
+}
+
+function enforceJobCC(el){
+  let digits = el.value.replace(/[^0-9]/g,'').slice(0,8);
+  let result = '#';
+  if(digits.length > 0) result += digits.slice(0,4);
+  if(digits.length > 4) result += '-' + digits.slice(4,8);
+  el.value = result;
+  setTimeout(()=>{ el.setSelectionRange(el.value.length, el.value.length); }, 0);
+}
+
+function getJobCC(){
+  const v = document.getElementById('f-jobcc').value;
+  if(!v || v === '#') return '';
+  if(!v.replace(/[^0-9]/g,'')) return '';
+  return v;
+}
+
+function enforceJobCC(el){
+  let digits = el.value.replace(/[^0-9]/g,'').slice(0,8);
+  let result = '#';
+  if(digits.length > 0) result += digits.slice(0,4);
+  if(digits.length > 4) result += '-' + digits.slice(4,8);
+  el.value = result;
+  setTimeout(()=>{ el.setSelectionRange(el.value.length, el.value.length); }, 0);
+}
+
+function getJobCC(){
+  const v = document.getElementById('f-jobcc').value;
+  if(!v || v === '#') return '';
+  if(!v.replace(/[^0-9]/g,'')) return '';
+  return v;
+}
+
+// Auto-grow textareas
+function autoGrow(el){
+  el.style.height = '40px';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+// Format date/time display
+function updateDisplay(inputId, dispId, type){
+  const val  = document.getElementById(inputId).value;
+  const disp = document.getElementById(dispId);
+  if(!val){ disp.textContent = ''; return; }
+  if(type === 'date'){
+    disp.textContent = formatDateFull(val);
+  } else {
+    const [h,min] = val.split(':');
+    const hr = parseInt(h);
+    const ampm = hr >= 12 ? 'PM' : 'AM';
+    const hr12 = hr % 12 || 12;
+    disp.textContent = `${hr12}:${min} ${ampm}`;
+  }
+}
+
+// ASAP toggle — no black background, just orange border when active
+function toggleASAP(){
+  const btn = document.getElementById('asap-btn');
+  const rd  = document.getElementById('f-req-date');
+  const rt  = document.getElementById('f-req-time');
+  const dd2 = document.getElementById('disp-req-date');
+  const dt  = document.getElementById('disp-req-time');
+  const on  = btn.classList.toggle('active');
+  if(on){
+    // Remove datetime-set class if present
+    btn.classList.remove('datetime-set');
+    rd.value = ''; rt.value = '';
+    dd2.textContent = ''; dt.textContent = '';
+    rd.style.pointerEvents = 'none'; rt.style.pointerEvents = 'none';
+    dd2.closest('.dt-field').style.opacity = '0.4';
+    dt.closest('.dt-field').style.opacity = '0.4';
+    dd2.closest('.dt-field').querySelector('label').style.textDecoration = 'line-through';
+    dt.closest('.dt-field').querySelector('label').style.textDecoration = 'line-through';
+  } else {
+    btn.classList.remove('datetime-set');
+    rd.style.pointerEvents = ''; rt.style.pointerEvents = '';
+    dd2.closest('.dt-field').style.opacity = '';
+    dt.closest('.dt-field').style.opacity = '';
+    dd2.closest('.dt-field').querySelector('label').style.textDecoration = '';
+    dt.closest('.dt-field').querySelector('label').style.textDecoration = '';
+  }
+}
+
+// When date AND time are both entered, add strikethrough to ASAP button text
+// but keep the box styling the same as any other input (no colour change)
+function checkStrikeASAP(){
+  const rd  = document.getElementById('f-req-date');
+  const rt  = document.getElementById('f-req-time');
+  const btn = document.getElementById('asap-btn');
+  if(rd.value && rt.value){
+    // If ASAP was active, deactivate it first
+    if(btn.classList.contains('active')){
+      btn.classList.remove('active');
+    }
+    // Apply strikethrough class — box stays normal, text gets struck
+    btn.classList.add('datetime-set');
+  } else {
+    btn.classList.remove('datetime-set');
+  }
+}
+
+// Supplier "Other"
+function toggleOtherSupplier(){
+  document.getElementById('sup-other-wrap').style.display =
+    document.getElementById('f-sup').value === 'Other' ? 'block' : 'none';
+}
+
+// Add material row
+function addRow(){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><div class="cell-fl">
+      <input type="text" class="qty-input" maxlength="5" style="padding:0 8px; text-align:center;" value="x" oninput="enforceQty(this)" onfocus="initQty(this)" onkeydown="preventQtyDelete(this,event)">
+    </div></td>
+    <td><div class="cell-fl">
+      <select class="unit-input" style="padding:0 8px; text-align:center;">
+        <option value=""></option>
+        <option>bag</option><option>box</option><option>each</option>
+        <option>length</option><option>lm</option><option>m</option>
+        <option>m2</option><option>mm</option><option>no</option>
+        <option>pack</option><option>pcs</option><option>roll</option>
+        <option>sheet</option>
+      </select>
+    </div></td>
+    <td><div class="cell-fl">
+      <textarea class="desc-input" oninput="syncRow(this)" style="padding:8px;"></textarea>
+    </div></td>`;
+  document.getElementById('materials').appendChild(tr);
+  const qtyInput = tr.querySelector('.qty-input');
+  setTimeout(()=>{ qtyInput.setSelectionRange(1,1); }, 0);
+}
+
+function initQty(el){
+  if(!el.value.startsWith('x')) el.value = 'x';
+  setTimeout(()=>{ el.setSelectionRange(el.value.length, el.value.length); }, 0);
+}
+
+function enforceQty(el){
+  if(!el.value.startsWith('x')){
+    el.value = 'x' + el.value.replace(/^x*/,'');
+  }
+  if(el.value.length > 5) el.value = el.value.slice(0,5);
+}
+
+function preventQtyDelete(el, e){
+  const sel = el.selectionStart;
+  const selEnd = el.selectionEnd;
+  if((e.key === 'Backspace' || e.key === 'Delete') && sel <= 1 && selEnd <= 1){
+    e.preventDefault();
+  }
+  if(e.key === 'Backspace' && selEnd === 1) e.preventDefault();
+}
+
+function syncRow(desc){
+  desc.style.height = '44px';
+  const h = Math.max(44, desc.scrollHeight);
+  desc.style.height = h + 'px';
+  const row = desc.closest('tr');
+  const qi = row.querySelector('.qty-input');
+  const ui = row.querySelector('.unit-input');
+  if(qi) qi.style.height = h + 'px';
+  if(ui) ui.style.height = h + 'px';
+  row.querySelectorAll('.cell-fl').forEach(el => el.style.height = h + 'px');
+}
+
+function getMaterialRows(){
+  const rows = [];
+  document.querySelectorAll('#materials tr').forEach(r => {
+    const q = (r.querySelector('.qty-input')||{}).value||'';
+    const u = (r.querySelector('.unit-input')||{}).value||'';
+    const d = (r.querySelector('.desc-input')||{}).value||'';
+    if(q.trim()||d.trim()) rows.push({qty:q.trim(), unit:u.trim(), desc:d.trim()});
+  });
+  return rows;
+}
+
+// Build the PO text
+function buildPO(){
+  const date    = document.getElementById('f-date').value;
+  const asap    = document.getElementById('asap-btn').classList.contains('active');
+  const reqDate = document.getElementById('disp-req-date').textContent || document.getElementById('f-req-date').value;
+  const reqTime = document.getElementById('disp-req-time').textContent || document.getElementById('f-req-time').value;
+  const emp     = document.getElementById('f-emp').value.trim();
+  const col     = document.getElementById('f-col').value.trim();
+  const job     = document.getElementById('f-job').value.trim();
+  const jobcc   = getJobCC();
+  let   sup     = document.getElementById('f-sup').value;
+  if(sup==='Other') sup = document.getElementById('f-sup-other').value.trim()||'Other';
+  const work    = document.getElementById('f-work').value.trim();
+  const del     = document.getElementById('f-del').value.trim();
+  const matRows = getMaterialRows();
+
+  const N = '\r\n';
+
+  let matLines = '';
+  if(matRows.length){
+    matRows.forEach((r) => {
+      let line = '';
+      if(r.qty && r.unit) line += r.qty + ' - ' + r.unit;
+      else if(r.qty)      line += r.qty;
+      if(r.desc) line += (r.qty ? ' - ' : '') + r.desc;
+      if(line) matLines += line + N;
+    });
+  } else {
+    matLines = '(none entered)' + N;
+  }
+
+  let po = '';
+  po += 'Date: '                       + date              + N;
+  po += 'Requested By: '               + (emp||'—')        + N;
+  po += 'Collection By: '              + (col||'—')        + N;
+  po += N;
+  po += 'Job/Site: '                   + (job||'—')        + N;
+  po += 'Job Number & Cost Centre: '   + (jobcc||'—')      + N;
+  po += N;
+  po += 'Description of Work: '        + (work||'—')       + N;
+  po += N;
+  po += 'Required By: '                + (asap ? 'ASAP' : ((reqDate||'—') + (reqTime ? ' at ' + reqTime : ''))) + N;
+  po += N;
+  po += 'Supplier: '                   + (sup||'—')        + N;
+  if(del) po += 'Collection / Delivery: ' + del            + N;
+  po += N;
+  po += 'Materials:'                                        + N;
+  po += matLines;
+
+  return po;
+}
+
+// Build email subject: "PO Request: Job/Site Name #XXXX-XXXX"
+function buildSubject(){
+  const job   = document.getElementById('f-job').value.trim();
+  const jobcc = getJobCC(); // returns e.g. "#1234-5678" or ""
+  let sub = 'PO Request:';
+  if(job) sub += ' ' + job;
+  if(jobcc) sub += ' ' + jobcc;
+  return sub;
+}
+
+function sendEmail(){
+  window.location.href = `mailto:reece@impel.co.nz,matt@impel.co.nz?subject=${encodeURIComponent(buildSubject())}&body=${encodeURIComponent(buildPO())}`;
+}
+
+async function copyForMessenger(){
+  const po = buildPO();
+  try {
+    await navigator.clipboard.writeText(po);
+  } catch(e){
+    const ta = Object.assign(document.createElement('textarea'),{value:po,style:'position:fixed;opacity:0'});
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  const confirm = document.getElementById('copy-confirm');
+  confirm.style.display = 'block';
+  setTimeout(()=>{ confirm.style.display='none'; }, 4000);
+}
+
+// Seed one blank row
+addRow();
+</script>
+</body>
+</html>
