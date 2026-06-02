@@ -478,28 +478,16 @@ function initJobCC(el){
 }
 
 function enforceJobCC(el){
+  let cursorPos = el.selectionStart || el.value.length;
   let digits = el.value.replace(/[^0-9]/g,'').slice(0,8);
   let result = '#';
   if(digits.length > 0) result += digits.slice(0,4);
   if(digits.length > 4) result += '-' + digits.slice(4,8);
   el.value = result;
-  setTimeout(()=>{ el.setSelectionRange(el.value.length, el.value.length); }, 0);
-}
-
-function getJobCC(){
-  const v = document.getElementById('f-jobcc').value;
-  if(!v || v === '#') return '';
-  if(!v.replace(/[^0-9]/g,'')) return '';
-  return v;
-}
-
-function enforceJobCC(el){
-  let digits = el.value.replace(/[^0-9]/g,'').slice(0,8);
-  let result = '#';
-  if(digits.length > 0) result += digits.slice(0,4);
-  if(digits.length > 4) result += '-' + digits.slice(4,8);
-  el.value = result;
-  setTimeout(()=>{ el.setSelectionRange(el.value.length, el.value.length); }, 0);
+  // Adjust cursor position: account for the hyphen that gets inserted
+  let newCursorPos = cursorPos;
+  if(digits.length > 4) newCursorPos = Math.min(cursorPos + 1, result.length);
+  setTimeout(()=>{ el.setSelectionRange(newCursorPos, newCursorPos); }, 0);
 }
 
 function getJobCC(){
